@@ -40,6 +40,7 @@
 		7D054DE72457236200F21002 /* GeoCheckerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GeoCheckerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D054DEB2457236200F21002 /* GeoCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoCheckerTests.swift; sourceTree = "<group>"; };
 		7D054DED2457236200F21002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D054DF624572D1600F21002 /* TestTrack.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = TestTrack.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 		7D054DC52457235E00F21002 = {
 			isa = PBXGroup;
 			children = (
+				7D054DF624572D1600F21002 /* TestTrack.gpx */,
 				7D054DD02457235F00F21002 /* GeoChecker */,
 				7D054DEA2457236200F21002 /* GeoCheckerTests */,
 				7D054DCF2457235F00F21002 /* Products */,
