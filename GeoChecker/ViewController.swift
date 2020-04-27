@@ -11,79 +11,66 @@ import CoreLocation
 import BackgroundTasks
 
 class ViewController: UIViewController {
-
+    
     let defaults = UserDefaults.standard
-    
-    @IBOutlet weak var locationLabel: UILabel!
-    
+    @IBOutlet var contentView: CustomView! = CustomView()
     var locationManager: CLLocationManager = CLLocationManager()
-    
     lazy var geocoder = CLGeocoder()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //contentView.setup()
+        //contentView.locationLabel.text = "hello"
         locationManager.delegate = self
-        
         locationManager.requestAlwaysAuthorization()
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.pausesLocationUpdatesAutomatically = true
         locationManager.startUpdatingLocation()
         locationManager.startMonitoringSignificantLocationChanges()
-        //defaults.set("Пока мы ничего не знаем", forKey: "location")
-        if let location = defaults.object(forKey: "location") {
-            locationLabel.textColor = .red
-            locationLabel.text = location as! String
+        contentView.changeLabelColor(color: .green)
+        if let location: String = defaults.object(forKey: "location") as? String {
+            print(location)
+           // self.contentView.changeLabelText(data: location)
+            //self.contentView.changeLabelColor(color: .red)
+        } else {
+            defaults.set("Пока мы ничего не знаем", forKey: "location")
+            //self.contentView.changeLabelText(data: "Пока мы ничего не знаем")
+            //self.contentView.changeLabelColor(color: .red)
         }
-        print("Loaded")
-        // Do any additional setup after loading the view.
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .notDetermined:
-            //print("Shit")
             manager.requestWhenInUseAuthorization()
-        case .restricted, .denied:
-            print("Shit 2")
+        case .restricted, .denied: break
         case .authorizedWhenInUse:
             manager.requestAlwaysAuthorization()
-        case .authorizedAlways:
-            print("OK 4")
-            
-        }
+        case .authorizedAlways: break
+    }
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("PreProcess")
         if let location = locations.last {
-            print("Process")
             geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
                 self.processResponse(withPlacemarks: placemarks, error: error)
             }
         } else{
-            locationLabel.textColor = .red
-            //print("Shit happens")
         }
     }
     
     private func processResponse(withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
 
-        if let error = error {
-            locationLabel.textColor = .red
-
+        if error != nil {
+            contentView.changeLabelColor(color: .red)
         } else {
             if let placemarks = placemarks, let placemark = placemarks.first {
                 defaults.set(placemark.compactAddress, forKey: "location")
-                locationLabel.textColor = .green
-                //locationLabel.text = placemark.compactAddress
-                locationLabel.text = defaults.object(forKey: "location") as! String
-                //print("OK")
-                //print(defaults.object(forKey: "location") as! String)
+                //contentView.locationLabel.text = placemark.compactAddress
+                contentView.changeLabelText(data: placemark.compactAddress!)
+                contentView.changeLabelColor(color: .green)
             } else {
-                locationLabel.textColor = .red
-                //locationLabel.text = "error"
-                //print("Not OK")
-                //print(defaults.object(forKey: "location") as! String)
-                locationLabel.text = defaults.object(forKey: "location") as! String
+                contentView.changeLabelText(data: defaults.object(forKey: "location") as! String)
+                contentView.changeLabelColor(color: .green)
             }
         }
     }
@@ -95,12 +82,10 @@ extension ViewController: CLLocationManagerDelegate {
 }
 
 extension CLPlacemark {
-
     var compactAddress: String? {
         if let result = administrativeArea {
             return result
         }
         return nil
     }
-
 }
